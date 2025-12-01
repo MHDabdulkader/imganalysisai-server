@@ -1,0 +1,28 @@
+# FastAPI framework
+fastapi==0.110.0
+uvicorn[standard]==0.23.2
+
+# Database
+SQLAlchemy==2.0.23
+psycopg2-binary==2.9.7
+
+# Environment variables
+python-dotenv==1.0.0
+
+# HTTP requests
+requests==2.32.0
+
+# Image handling
+
+
+# ImageKit SDK
+imagekitio==2.2.2
+
+# Optional: OpenAI SDK
+openai==1.29.0
+
+# HuggingFace Inference
+huggingface-hub==1.2.3
+
+# Optional: Replicate SDK
+replicate==0.12.0
