@@ -2,6 +2,9 @@ from sqlalchemy.orm import Session
 from app.model.user_model import User
 from app.schema.user_schema import createUser
 from app.utils.bcrypt import hash_password, password_verify
+from app.utils.jwt import verify_token
+from fastapi import Header, HTTPException
+from app.schema.base_response import BaseResponse
 
 class UserService:
     @staticmethod
@@ -45,6 +48,27 @@ class UserService:
         if isValid:
             return user
         return None
+    
+    @staticmethod
+    def get_current_user(authorization: str = Header(...)):
+        if not authorization:
+            HTTPException(status_code=401, detail="Missing authorizaton..")
+            return BaseResponse(status=401, success=False, message="Missing authorization..", data=None)
         
+        try :
+            scheme, token = authorization.split()
+            if scheme.lower() != "bearer":
+                HTTPException(status_code=401, detail="Invalid auth scheme..")
+                return BaseResponse(status=401, success=False, message="Invalid auth scheme..", data=None)
+        except ValueError:
+            HTTPException(status_code=401, detail="Invalid auth header format..")
+            return BaseResponse(status=401, success=False, message="Invalid auth header format..", data=None)
+        
+        try:
+            payload = verify_token(token)
+            return payload
+        except Exception:
+            HTTPException(status_code=401, detail="Invalid or expire token..")
+            return BaseResponse(status=401, success=False, message="Invalid or expire token..", data=None)
     
     

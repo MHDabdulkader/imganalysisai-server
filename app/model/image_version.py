@@ -2,7 +2,7 @@
 from sqlalchemy import Column, Integer, String, Text, DateTime,Boolean, func, ForeignKey
 from app.db.database import Base
 from sqlalchemy.orm import relationship, mapped_column, Mapped
-from app.model.image_collection import ImageCollection
+# from app.model.image_collection import ImageCollection
 
 class ImageVersion(Base):
     __tablename__ = "image_versions"

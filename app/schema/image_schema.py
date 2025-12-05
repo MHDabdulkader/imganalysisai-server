@@ -5,18 +5,43 @@ from datetime import datetime
 
 class ImageVersionCreate(BaseModel):
     image_url: str
-    parent_id: int
     isFinal: bool = False
 
 class ImageCollectionCreate(BaseModel):
     prompt: str
     model: str
     style: str
-    user_id : int
     image_version: List[ImageVersionCreate]
     
     
 # class ImageCollectionList(BaseModel):
+
+class ImageList(BaseModel):
+    images: List[ImageById] | None = None
+    
+class ImageGenerationRequest(BaseModel):
+    prompt: str
+    style: str | None = None
+    model: str
+
+class ImageGenerationList(BaseModel):
+    urls: List[str] 
+    
+class ImageVersionResponse(BaseModel):
+    id: int
+    image_url: str
+    isFinal: bool
+    prarent_id: int
+    
+    collection_id: int
+    
+    created_at: datetime
+    updated_at: datetime
+    
+    model_config= {
+        "from_attributes": True,
+    }
+    
     
 class ImageById(BaseModel):
     id: int
@@ -24,7 +49,7 @@ class ImageById(BaseModel):
     model: str
     style: str
     user_id: int
-    image_version: List[ImageVersionCreate]
+    image_version: List[ImageVersionResponse]
     
     created_at: datetime
     updated_at: datetime
@@ -55,24 +80,5 @@ class ImageById(BaseModel):
                 }
             ]
         },
-    }
-
-class ImageList(BaseModel):
-    images: List[ImageById] | None = None
-    
-    
-class ImageVersionResponse(BaseModel):
-    id: int
-    image_url: str
-    isFinal: bool
-    prarent_id: int
-    
-    collection_id: int
-    
-    created_at: datetime
-    updated_at: datetime
-    
-    model_config= {
-        "from_attributes": True,
     }
     

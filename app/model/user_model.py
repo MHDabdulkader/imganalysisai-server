@@ -2,7 +2,7 @@
 from sqlalchemy import Column, Integer, String, Text, DateTime, func
 from app.db.database import Base
 
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 
 class User(Base): 
@@ -15,6 +15,12 @@ class User(Base):
     
     address: Mapped[str] = mapped_column(String(255))
     name: Mapped[str] = mapped_column(String(100))
+    
+    image_collections : Mapped[list["ImageCollection"]] = relationship(
+        "ImageCollection",
+        back_populates="user",
+        cascade="all, delete-orphan"
+    )
     
     created_at: Mapped[DateTime] = mapped_column(DateTime(timezone=True), default=func.now())
     updated_at: Mapped[DateTime] = mapped_column(DateTime(timezone=True), default=func.now(), onupdate=func.now())

@@ -5,12 +5,12 @@ from app.schema.image_schema import ImageCollectionCreate
 
 class ImageService:
     @staticmethod
-    def create_image_collection(db:Session, data: ImageCollectionCreate):
+    def create_image_collection(db:Session, data: ImageCollectionCreate, user_id: int):
         newImageCollection = ImageCollection(
             prompt = data.prompt,
             model = data.model,
             style = data.style,
-            user_id = data.user_id
+            user_id = user_id
         )
         db.add(newImageCollection)
         db.flush()
@@ -38,8 +38,37 @@ class ImageService:
             return None
         
         new_version = ImageVersion(
-            image_url=image_url
+            image_url=image_url,
+            parent_id = collection_id,
+            isFinal = isFinal,
+            collection_id=collection_id
         )
+        
+        db.add(new_version)
+        db.commit()
+        db.refresh(new_version)
+        return new_version
+    
+    @staticmethod
+    def set_final_version(db:Session,collection_id: int, version_id: int):
+        image_version = db.query(ImageVersion).filter(
+            ImageVersion.id == version_id 
+            
+        ).first()
+        
+        if not image_version:
+            return None
+        
+        db.query(ImageVersion).filter(
+            ImageVersion.collection_id == image_version.collection_id
+        ).update({ImageVersion.isFinal : False})
+        
+        image_version.isFinal = True
+        
+        db.commit()
+        db.refresh(image_version)
+        
+        return image_version
     
     @staticmethod
     def get_by_id(db: Session, id: int):
