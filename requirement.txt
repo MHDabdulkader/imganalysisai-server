@@ -33,3 +33,5 @@ pip install "pwdlib[argon2]"
 pip install pyjwt
 
 pip install passlib
+
+huggingface_hub
